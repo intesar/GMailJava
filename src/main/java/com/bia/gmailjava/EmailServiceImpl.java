@@ -20,7 +20,6 @@ package com.bia.gmailjava;
  *
  * @author intesar
  */
-import com.sun.org.apache.xerces.internal.impl.dv.dtd.StringDatatypeValidator;
 import java.util.Properties;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
