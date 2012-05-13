@@ -28,7 +28,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.log4j.Logger;
+// uncomment log4j if you already have
+//import org.apache.log4j.Logger;
 
 public class EmailService {
 
@@ -44,7 +45,7 @@ public class EmailService {
     private String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
     
     
-    private static Logger logger = Logger.getLogger(EmailService.class);
+    //private static Logger logger = Logger.getLogger(EmailService.class);
     private static final EmailService instance = new EmailService();
     private ScheduledThreadPoolExecutor executor;
 
@@ -202,7 +203,7 @@ public class EmailService {
             send(addressTo, subject, message);
 
         } catch (Exception ex) {
-            logger.warn(ex.getMessage(), ex);
+            //logger.warn(ex.getMessage(), ex);
             throw new RuntimeException("Error sending email, please check to and from emails are correct!");
         }
     }
