@@ -44,6 +44,9 @@ Step 1:
 
     Copy EmailService.java to your project
 
+    code: https://github.com/intesar/GMailJava/blob/master/src/main/java/com/bia/gmailjava/EmailService.java
+
+
     Step 3:
 
     Set username, password in EmailService.java 
@@ -52,3 +55,9 @@ Step 1:
 
       EmailService emailService = EmailService.getInstance();
       emailService.sendEmail("<toemail>", "<subject>", "<body>");
+
+    Design Decisions
+     No interface is define to keep simpler eco-system, feel free to add yours if required and refactor code accordingly
+     Pattern's used - Singleton, Command, Async
+     
+     
