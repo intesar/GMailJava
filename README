@@ -1,5 +1,4 @@
-Step 1:
-    Add dependencies to your maven projeect
+    Step 1: Add dependencies to your maven projeect
 
     <!-- mail -->
     <dependency>
@@ -17,18 +16,14 @@ Step 1:
 
     
 
-    Step 2:
-
-    Copy EmailService.java to your project
+    Step 2: Copy EmailService.java to your project
 
     code: https://github.com/intesar/GMailJava/blob/master/src/main/java/com/bia/gmailjava/EmailService.java
 
 
-    Step 3:
+    Step 3: Set username, password in EmailService.java 
 
-    Set username, password in EmailService.java 
-
-    Step 4:
+    Step 4: Sample code
 
       EmailService emailService = EmailService.getInstance();
       emailService.sendEmail("<toemail>", "<subject>", "<body>");
