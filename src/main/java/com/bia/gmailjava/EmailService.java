@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.bia.gmailjava;
 
 /**
@@ -37,14 +36,10 @@ public class EmailService {
     // example@gmail.com or example@zytoon.me
     private String USERNAME = "<example@gmail.com>";
     private String PASSWORD = "<password>";
-    
     private String EMAIL_CONTENT_TYPE = "text/html";
-    
     private String SMTP_HOST_NAME = "smtp.gmail.com";
     private String SMTP_PORT = "465";
     private String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-    
-    
     //private static Logger logger = Logger.getLogger(EmailService.class);
     private static final EmailService instance = new EmailService();
     private ScheduledThreadPoolExecutor executor;
@@ -52,66 +47,79 @@ public class EmailService {
     private EmailService() {
         executor = new ScheduledThreadPoolExecutor(2);
     }
-    
     private Session session;
-    private InternetAddress[] bcc;
+    // If require enable it
+    //private InternetAddress[] bcc;
 
     public static EmailService getInstance() {
         return instance;
     }
 
-    
+    /**
+     * 
+     * @param toAddress
+     * @param subject
+     * @param body
+     * @return true email send, false invalid input
+     */
     public boolean sendEmail(String toAddress, String subject, String body) {
-        if (!isValidEmail(toAddress) || !isValidSubject(subject)){
+        if (!isValidEmail(toAddress) || !isValidSubject(subject)) {
             return false;
         }
-                
+
         String[] to = {toAddress};
         // Aysnc send email
         Runnable emailServiceAsync = new EmailServiceAsync(to, subject, body);
         this.executor.schedule(emailServiceAsync, 1, TimeUnit.MILLISECONDS);
-        
+
         return true;
     }
-    
+
+    /**
+     * 
+     * @param toAddresses
+     * @param subject
+     * @param body
+     * @return true email send, false invalid input
+     */
     public boolean sendEmail(String[] toAddresses, String subject, String body) {
-        if (!isValidEmail(toAddresses) || !isValidSubject(subject)){
+        if (!isValidEmail(toAddresses) || !isValidSubject(subject)) {
             return false;
         }
-        
+
         // Aysnc send email
         Runnable emailServiceAsync = new EmailServiceAsync(toAddresses, subject, body);
         this.executor.schedule(emailServiceAsync, 1, TimeUnit.MILLISECONDS);
-        
+
         return true;
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param emails
-     * @return 
+     * @return
      */
     private boolean isValidEmail(String... emails) {
         for (String email : emails) {
-            if ( !EmailValidator.getInstance().isValid(email)) {
+            if (!EmailValidator.getInstance().isValid(email)) {
                 return false;
             }
         }
         return true;
     }
-    
+
     private boolean isValidSubject(String subject) {
-        if ( subject == null || subject.trim().length() == 0 ) {
+        if (subject == null || subject.trim().length() == 0) {
             return false;
         }
         return true;
     }
 
     /*
-     * 
+     *
      * Aysnc send emails using command pattern
-     * 
+     *
      */
     private class EmailServiceAsync implements Runnable {
 
@@ -133,7 +141,8 @@ public class EmailService {
 
     /**
      * session is created only once
-     * @return 
+     *
+     * @return
      */
     private Session createSession() {
 
@@ -163,21 +172,20 @@ public class EmailService {
         return session;
     }
 
-    
     /**
      * bcc -- incase you need to be copied on emails
+     *
      * @return
-     * @throws AddressException 
+     * @throws AddressException
      */
-    private InternetAddress[] getBCC() throws AddressException {
-        if (bcc != null) {
-            return bcc;
-        }
-        bcc = new InternetAddress[1];
-        bcc[0] = new InternetAddress("example@yahoo.com");
-        return bcc;
-    }
-
+//    private InternetAddress[] getBCC() throws AddressException {
+//        if (bcc != null) {
+//            return bcc;
+//        }
+//        bcc = new InternetAddress[1];
+//        bcc[0] = new InternetAddress("example@yahoo.com");
+//        return bcc;
+//    }
     /**
      *
      * @param recipients
@@ -209,23 +217,23 @@ public class EmailService {
     }
 
     /**
-     * 
+     *
      * @param addressTo
      * @param subject
      * @param message
      * @throws AddressException
-     * @throws MessagingException 
+     * @throws MessagingException
      */
     private void send(InternetAddress[] addressTo, String subject, String message) throws AddressException, MessagingException {
         Message msg = new MimeMessage(createSession());
         InternetAddress addressFrom = new InternetAddress(USERNAME);
         msg.setFrom(addressFrom);
         msg.setRecipients(Message.RecipientType.TO, addressTo);
-        
+
         // set bcc
-        InternetAddress[] bcc1 = getBCC();
-        msg.setRecipients(Message.RecipientType.BCC, bcc1);
-        
+        //InternetAddress[] bcc1 = getBCC();
+        //msg.setRecipients(Message.RecipientType.BCC, bcc1);
+
         // Setting the Subject and Content Type
         msg.setSubject(subject);
         //String message = comment;
@@ -233,5 +241,4 @@ public class EmailService {
 
         Transport.send(msg);
     }
-    
 }

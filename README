@@ -30,6 +30,6 @@
 
     Design Decisions
      No interface is define to keep simpler eco-system, feel free to add yours if required and refactor code accordingly
-     Pattern's used - Singleton, Command, Async
+     Pattern's & Technique's used - Singleton, Command, Async, Inner class
      
      
