@@ -17,7 +17,8 @@ package com.bia.gmailjava;
 
 /**
  *
- * @author intesar
+ * @author intesar mohammed
+ * mdshannan@gmail.com
  */
 import java.util.Properties;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
