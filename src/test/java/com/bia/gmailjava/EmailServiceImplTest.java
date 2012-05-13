@@ -16,8 +16,7 @@
 
 package com.bia.gmailjava;
 
-import java.util.Date;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import org.junit.*;
 
 /**
@@ -46,40 +45,73 @@ public class EmailServiceImplTest {
     }
 
     private EmailService instance = EmailService.getInstance();
-    /**
-     * Test of sendEmail method, of class EmailService.
-     */
-    @Test
-    public void testSendEmail1() {
-        System.out.println("sendEmail");
-        String toAddress = "intesar@ymail.com";
-        String subject = "Monitor App Test!";
-        String body = "Test!";
-        
-        try {
-            long st = (new Date()).getTime();
-            instance.sendEmail(toAddress, subject, body);
-            System.out.println("Total Time ms : " + ((new Date()).getTime() - (st)));
-        } catch (RuntimeException ex) {
-            fail("The test case is a prototype.");
-        }
-    }
     
     /**
      * Test of sendEmail method, of class EmailService.
      */
     @Test
-    public void testSendEmail2() {
+    public void testSendEmail_3args_1() {
         System.out.println("sendEmail");
-        String[] toAddress = {"intesar@ymail.com"};
-        String subject = "Monitor App Test!";
-        String body = "Test!";
-        try {
-            long st = (new Date()).getTime();
-            instance.sendEmail(toAddress, subject, body);
-            System.out.println("Total Time ms : " + ((new Date()).getTime() - (st)));
-        } catch (RuntimeException ex) {
-            fail("The test case is a prototype.");
-        }
+        
+        String toAddress = "mdshannan@gmail.com";
+        String subject = "testing yahoo send";
+        String body = "testing body";
+        
+        check(toAddress, subject, body, true); // all valid
+        check(toAddress, subject, "", true); // optional body missing
+        check(toAddress, subject, null, true); // optional body missing
+        check(toAddress, subject, " ", true); // optional body missing
+        
+        check(toAddress, "", body, false); // subject missing
+        check(toAddress, null, body, false); // subject missing
+        check(toAddress, "  ", body, false); // subject missing
+        
+        String toAddress0 = null;
+        check(toAddress0, subject, body, false); // subject missing
+        String toAddress1 = "mdshannan@gmail";
+        check(toAddress1, subject, body, false); // subject missing
+        String toAddress2 = "mdshannan";
+        check(toAddress2, subject, body, false); // subject missing
+        String toAddress3 = "";
+        check(toAddress3, subject, body, false); // subject missing
+    }
+
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_3args_2() {
+        System.out.println("sendEmail");
+        String[] toAddress = {"mdshannan@gmail.com"};
+        String subject = "testing yahoo send";
+        String body = "testing body";
+        
+        check(toAddress, subject, body, true); // all valid
+        check(toAddress, subject, "", true); // optional body missing
+        check(toAddress, subject, null, true); // optional body missing
+        check(toAddress, subject, " ", true); // optional body missing
+        
+        check(toAddress, "", body, false); // subject missing
+        check(toAddress, null, body, false); // subject missing
+        check(toAddress, "  ", body, false); // subject missing
+        
+        String[] toAddress0 = null;
+        check(toAddress0, subject, body, false); // subject missing
+        String[] toAddress1 = {"mdshannan@gmail"};
+        check(toAddress1, subject, body, false); // subject missing
+        String[] toAddress2 = {"mdshannan"};
+        check(toAddress2, subject, body, false); // subject missing
+        String[] toAddress3 = {""};
+        check(toAddress3, subject, body, false); // subject missing
+    }
+    
+    private void check(String to, String subject, String body, boolean expResult) {
+        boolean result = instance.sendEmail(to, subject, body);
+        assertEquals(expResult, result);
+    }
+    
+    private void check(String[] to, String subject, String body, boolean expResult) {
+        boolean result = instance.sendEmail(to, subject, body);
+        assertEquals(expResult, result);
     }
 }

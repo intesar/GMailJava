@@ -102,6 +102,9 @@ public class EmailService {
      * @return
      */
     private boolean isValidEmail(String... emails) {
+        if ( emails == null ) {
+            return false;
+        }
         for (String email : emails) {
             if (!EmailValidator.getInstance().isValid(email)) {
                 return false;
