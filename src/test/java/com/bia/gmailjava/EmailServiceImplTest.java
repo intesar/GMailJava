@@ -45,9 +45,9 @@ public class EmailServiceImplTest {
     public void tearDown() {
     }
 
-    private EmailService instance = EmailServiceImpl.getInstance();
+    private EmailService instance = EmailService.getInstance();
     /**
-     * Test of sendEmail method, of class EmailServiceImpl.
+     * Test of sendEmail method, of class EmailService.
      */
     @Test
     public void testSendEmail1() {
@@ -66,7 +66,7 @@ public class EmailServiceImplTest {
     }
     
     /**
-     * Test of sendEmail method, of class EmailServiceImpl.
+     * Test of sendEmail method, of class EmailService.
      */
     @Test
     public void testSendEmail2() {
