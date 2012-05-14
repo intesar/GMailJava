@@ -20,7 +20,7 @@
 
     code: https://github.com/intesar/GMailJava/blob/master/src/main/java/com/bia/gmailjava/EmailService.java
 
-
+    Note: Enable pop, IMAP inside GMail --> Settings --> Forwarding and POP / IMAP
     Sample code
 
       EmailService emailService = EmailService.getInstance();
