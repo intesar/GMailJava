@@ -17,8 +17,7 @@ package com.bia.gmailjava;
 
 /**
  *
- * @author intesar mohammed
- * mdshannan@gmail.com
+ * @author intesar mohammed mdshannan@gmail.com
  */
 import java.util.Properties;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -57,7 +56,7 @@ public class EmailService {
     }
 
     /**
-     * 
+     *
      * @param toAddress
      * @param subject
      * @param body
@@ -77,7 +76,7 @@ public class EmailService {
     }
 
     /**
-     * 
+     *
      * @param toAddresses
      * @param subject
      * @param body
@@ -102,7 +101,7 @@ public class EmailService {
      * @return
      */
     private boolean isValidEmail(String... emails) {
-        if ( emails == null ) {
+        if (emails == null) {
             return false;
         }
         for (String email : emails) {
@@ -244,5 +243,30 @@ public class EmailService {
         msg.setContent(message, EMAIL_CONTENT_TYPE);
 
         Transport.send(msg);
+    }
+
+    /**
+     *
+     * @throws Throwable
+     */
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            // releasing executor
+            this.executor.shutdown();
+            // logger.trace("EmailService executor released!");
+            System.out.println ("EmailService exector released!");
+        } finally {
+            super.finalize();
+        }
+
+    }
+    
+    /**
+     *  call this method from ServletContextListener.contextDestroyed()
+     *  This will release all work thread's when your app is undeployed
+     */
+    public void shutdown() {
+        this.executor.shutdown();
     }
 }
