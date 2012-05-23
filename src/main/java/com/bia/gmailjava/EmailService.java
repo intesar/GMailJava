@@ -26,6 +26,7 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 // uncomment log4j if you already have
 //import org.apache.log4j.Logger;
@@ -49,7 +50,7 @@ public class EmailService {
     }
     private Session session;
     // If require enable it
-    //private InternetAddress[] bcc;
+    private InternetAddress[] bcc;
 
     public static EmailService getInstance() {
         return instance;
@@ -96,7 +97,7 @@ public class EmailService {
     }
 
     /**
-     *
+     * validates email/emails 
      * @param emails
      * @return
      */
@@ -112,11 +113,13 @@ public class EmailService {
         return true;
     }
 
+    /**
+     * 
+     * @param subject cannot be empty
+     * @return 
+     */
     private boolean isValidSubject(String subject) {
-        if (subject == null || subject.trim().length() == 0) {
-            return false;
-        }
-        return true;
+        return !GenericValidator.isBlankOrNull(subject);
     }
 
     /*
@@ -181,14 +184,14 @@ public class EmailService {
      * @return
      * @throws AddressException
      */
-//    private InternetAddress[] getBCC() throws AddressException {
-//        if (bcc != null) {
-//            return bcc;
-//        }
-//        bcc = new InternetAddress[1];
-//        bcc[0] = new InternetAddress("example@yahoo.com");
-//        return bcc;
-//    }
+    private InternetAddress[] getBCC() throws AddressException {
+        if (bcc != null) {
+            return bcc;
+        }
+        bcc = new InternetAddress[1];
+        bcc[0] = new InternetAddress("example@yahoo.com");
+        return bcc;
+    }
     /**
      *
      * @param recipients
@@ -201,10 +204,7 @@ public class EmailService {
             String message) {
 
         try {
-            if (recipients == null || recipients.length == 0) {
-                return;
-            }
-
+            
             InternetAddress[] addressTo = new InternetAddress[recipients.length];
             for (int i = 0; i < recipients.length; i++) {
                 if (recipients[i] != null && recipients[i].length() > 0) {

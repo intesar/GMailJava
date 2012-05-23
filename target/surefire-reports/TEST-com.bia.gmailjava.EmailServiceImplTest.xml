@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.099" errors="0" skipped="0" tests="2" name="com.bia.gmailjava.EmailServiceImplTest">
+<testsuite failures="0" time="1.44" errors="0" skipped="0" tests="2" name="com.bia.gmailjava.EmailServiceImplTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries"/>
@@ -10,6 +10,7 @@
     <property name="java.vm.vendor" value="Apple Inc."/>
     <property name="java.vendor.url" value="http://www.apple.com/"/>
     <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
     <property name="user.country" value="US"/>
@@ -19,18 +20,16 @@
     <property name="user.dir" value="/Users/intesar/NetBeansProjects/GMailJava"/>
     <property name="java.runtime.version" value="1.6.0_31-b04-415-11M3635"/>
     <property name="java.awt.graphicsenv" value="apple.awt.CGraphicsEnvironment"/>
-    <property name="basedir" value="/Users/intesar/NetBeansProjects/GMailJava"/>
     <property name="java.endorsed.dirs" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/endorsed"/>
     <property name="os.arch" value="x86_64"/>
-    <property name="surefire.real.class.path" value="/Users/intesar/NetBeansProjects/GMailJava/target/surefire/surefirebooter3758526884543335663.jar"/>
     <property name="java.io.tmpdir" value="/var/folders/0l/l38fch5j6872y82rzm5yl5q40000gn/T/"/>
     <property name="line.separator" value="
 "/>
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="os.name" value="Mac OS X"/>
+    <property name="classworlds.conf" value="/Applications/NetBeans/NetBeans 7.1.1.app/Contents/Resources/NetBeans/java/maven/bin/m2.conf"/>
     <property name="sun.jnu.encoding" value="MacRoman"/>
     <property name="java.library.path" value=".:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
-    <property name="surefire.test.class.path" value="/Users/intesar/NetBeansProjects/GMailJava/target/test-classes:/Users/intesar/NetBeansProjects/GMailJava/target/classes:/Users/intesar/.m2/repository/javax/mail/mail/1.4/mail-1.4.jar:/Users/intesar/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/Users/intesar/.m2/repository/commons-validator/commons-validator/1.4.0/commons-validator-1.4.0.jar:/Users/intesar/.m2/repository/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar:/Users/intesar/.m2/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.jar:/Users/intesar/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/Users/intesar/.m2/repository/log4j/log4j/1.2.15/log4j-1.2.15.jar:/Users/intesar/.m2/repository/junit/junit/4.10/junit-4.10.jar:/Users/intesar/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar:"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="50.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -42,11 +41,11 @@
     <property name="java.specification.version" value="1.6"/>
     <property name="file.encoding" value="MacRoman"/>
     <property name="user.name" value="intesar"/>
-    <property name="java.class.path" value="/Users/intesar/NetBeansProjects/GMailJava/target/test-classes:/Users/intesar/NetBeansProjects/GMailJava/target/classes:/Users/intesar/.m2/repository/javax/mail/mail/1.4/mail-1.4.jar:/Users/intesar/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/Users/intesar/.m2/repository/commons-validator/commons-validator/1.4.0/commons-validator-1.4.0.jar:/Users/intesar/.m2/repository/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar:/Users/intesar/.m2/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.jar:/Users/intesar/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/Users/intesar/.m2/repository/log4j/log4j/1.2.15/log4j-1.2.15.jar:/Users/intesar/.m2/repository/junit/junit/4.10/junit-4.10.jar:/Users/intesar/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar:"/>
+    <property name="java.class.path" value="/Applications/NetBeans/NetBeans 7.1.1.app/Contents/Resources/NetBeans/java/maven/boot/plexus-classworlds-2.4.jar"/>
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"/>
-    <property name="sun.java.command" value="/Users/intesar/NetBeansProjects/GMailJava/target/surefire/surefirebooter3758526884543335663.jar /Users/intesar/NetBeansProjects/GMailJava/target/surefire/surefire8453301375533251180tmp /Users/intesar/NetBeansProjects/GMailJava/target/surefire/surefire626526481075754324tmp"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.language" value="en"/>
     <property name="awt.toolkit" value="apple.awt.CToolkit"/>
@@ -55,7 +54,7 @@
     <property name="java.ext.dirs" value="/Library/Java/Extensions:/System/Library/Java/Extensions:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext"/>
     <property name="sun.boot.class.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsfd.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/ui.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/laf.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/sunrsasign.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar"/>
     <property name="java.vendor" value="Apple Inc."/>
-    <property name="localRepository" value="/Users/intesar/.m2/repository"/>
+    <property name="maven.home" value="/Applications/NetBeans/NetBeans 7.1.1.app/Contents/Resources/NetBeans/java/maven"/>
     <property name="file.separator" value="/"/>
     <property name="java.vendor.url.bug" value="http://bugreport.apple.com/"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -65,6 +64,6 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.016" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_1"/>
-  <testcase time="0.007" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_2"/>
+  <testcase time="0.593" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_1"/>
+  <testcase time="0" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_2"/>
 </testsuite>
