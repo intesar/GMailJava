@@ -31,16 +31,31 @@ import org.apache.commons.validator.routines.EmailValidator;
 // uncomment log4j if you already have
 //import org.apache.log4j.Logger;
 
-public class EmailService {
+enum Credentials {
 
     // just set the username / password
-    // example@gmail.com or example@zytoon.me
-    private String USERNAME = "<example@gmail.com>";
-    private String PASSWORD = "<password>";
-    private String EMAIL_CONTENT_TYPE = "text/html";
-    private String SMTP_HOST_NAME = "smtp.gmail.com";
-    private String SMTP_PORT = "465";
-    private String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    USERNAME("<example@gmail.com>"), // TODO
+    PASSWORD("<password>"), // TODO   
+    BCC_EMAIL("<example@yahoo.com>"), // TODO
+
+    EMAIL_CONTENT_TYPE("text/html"),
+    SMTP_HOST_NAME("smtp.gmail.com"),
+    SMTP_PORT("465"),
+    SSL_FACTORY("javax.net.ssl.SSLSocketFactory");
+
+    Credentials(String val) {
+        this.val = val;
+    }
+    private String val;
+
+    @Override
+    public String toString() {
+        return val;
+    }
+}
+
+public class EmailService {
+
     //private static Logger logger = Logger.getLogger(EmailService.class);
     private static final EmailService instance = new EmailService();
     private ScheduledThreadPoolExecutor executor;
@@ -97,41 +112,15 @@ public class EmailService {
     }
 
     /**
-     * validates email/emails 
-     * @param emails
-     * @return
-     */
-    private boolean isValidEmail(String... emails) {
-        if (emails == null) {
-            return false;
-        }
-        for (String email : emails) {
-            if (!EmailValidator.getInstance().isValid(email)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 
-     * @param subject cannot be empty
-     * @return 
-     */
-    private boolean isValidSubject(String subject) {
-        return !GenericValidator.isBlankOrNull(subject);
-    }
-
-    /*
      *
      * Aysnc send emails using command pattern
      *
      */
     private class EmailServiceAsync implements Runnable {
 
-        String recipients[];
-        String subject;
-        String message;
+        private String recipients[];
+        private String subject;
+        private String message;
 
         EmailServiceAsync(String recipients[], String subject,
                 String message) {
@@ -140,6 +129,7 @@ public class EmailService {
             this.message = message;
         }
 
+        @Override
         public void run() {
             EmailService.this.sendSSMessage(recipients, subject, message);
         }
@@ -155,26 +145,24 @@ public class EmailService {
         if (session != null) {
             return session;
         }
-        boolean debug = false;
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", SMTP_HOST_NAME);
+        props.put("mail.smtp.host", Credentials.SMTP_HOST_NAME.toString());
         props.put("mail.smtp.auth", "true");
         props.put("mail.debug", "false");
-        props.put("mail.smtp.port", SMTP_PORT);
-        props.put("mail.smtp.socketFactory.port", SMTP_PORT);
-        props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.put("mail.smtp.port", Credentials.SMTP_PORT.toString());
+        props.put("mail.smtp.socketFactory.port", Credentials.SMTP_PORT.toString());
+        props.put("mail.smtp.socketFactory.class", Credentials.SSL_FACTORY.toString());
         props.put("mail.smtp.socketFactory.fallback", "false");
         session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
-
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(USERNAME, PASSWORD); // todo add password before deploy
+                        return new PasswordAuthentication(Credentials.USERNAME.toString(), Credentials.PASSWORD.toString());
                     }
                 });
 
-        session.setDebug(debug);
+        session.setDebug(false);
         return session;
     }
 
@@ -188,10 +176,16 @@ public class EmailService {
         if (bcc != null) {
             return bcc;
         }
-        bcc = new InternetAddress[1];
-        bcc[0] = new InternetAddress("example@yahoo.com");
+        if (!Credentials.BCC_EMAIL.toString().equals("<example@yahoo.com>") && isValidEmail(Credentials.BCC_EMAIL.toString())) {
+            bcc = new InternetAddress[1];
+            bcc[0] = new InternetAddress(Credentials.BCC_EMAIL.toString());
+        } else {
+            bcc = new InternetAddress[0];
+        }
+
         return bcc;
     }
+
     /**
      *
      * @param recipients
@@ -204,7 +198,7 @@ public class EmailService {
             String message) {
 
         try {
-            
+
             InternetAddress[] addressTo = new InternetAddress[recipients.length];
             for (int i = 0; i < recipients.length; i++) {
                 if (recipients[i] != null && recipients[i].length() > 0) {
@@ -229,22 +223,51 @@ public class EmailService {
      */
     private void send(InternetAddress[] addressTo, String subject, String message) throws AddressException, MessagingException {
         Message msg = new MimeMessage(createSession());
-        InternetAddress addressFrom = new InternetAddress(USERNAME);
+        InternetAddress addressFrom = new InternetAddress(Credentials.USERNAME.toString());
         msg.setFrom(addressFrom);
         msg.setRecipients(Message.RecipientType.TO, addressTo);
 
         // set bcc
-        //InternetAddress[] bcc1 = getBCC();
-        //msg.setRecipients(Message.RecipientType.BCC, bcc1);
+        InternetAddress[] bcc1 = getBCC();
+        if (bcc1 != null && bcc1.length > 0) {
+            msg.setRecipients(Message.RecipientType.BCC, bcc1);
+        }
 
         // Setting the Subject and Content Type
         msg.setSubject(subject);
         //String message = comment;
-        msg.setContent(message, EMAIL_CONTENT_TYPE);
+        msg.setContent(message, Credentials.EMAIL_CONTENT_TYPE.toString());
 
         Transport.send(msg);
     }
 
+     /**
+     * validates email/emails
+     *
+     * @param emails
+     * @return
+     */
+    private boolean isValidEmail(String... emails) {
+        if (emails == null) {
+            return false;
+        }
+        for (String email : emails) {
+            if (!EmailValidator.getInstance().isValid(email)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param subject cannot be empty
+     * @return
+     */
+    private boolean isValidSubject(String subject) {
+        return !GenericValidator.isBlankOrNull(subject);
+    }
+    
     /**
      *
      * @throws Throwable
@@ -252,21 +275,22 @@ public class EmailService {
     @Override
     protected void finalize() throws Throwable {
         try {
-            // releasing executor
-            this.executor.shutdown();
-            // logger.trace("EmailService executor released!");
-            System.out.println ("EmailService exector released!");
+            shutdown();
         } finally {
             super.finalize();
         }
 
     }
-    
+
     /**
-     *  call this method from ServletContextListener.contextDestroyed()
-     *  This will release all work thread's when your app is undeployed
+     * call this method from ServletContextListener.contextDestroyed() This will
+     * release all work thread's when your app is undeployed
      */
     public void shutdown() {
+        // releasing executor
         this.executor.shutdown();
+        // logger.trace("EmailService executor released!");
+        System.out.println("EmailService exector released!");
+
     }
 }

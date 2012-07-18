@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="1.44" errors="0" skipped="0" tests="2" name="com.bia.gmailjava.EmailServiceImplTest">
+<testsuite failures="0" time="0.057" errors="0" skipped="0" tests="2" name="com.bia.gmailjava.EmailServiceImplTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries"/>
-    <property name="java.vm.version" value="20.6-b01-415"/>
+    <property name="java.vm.version" value="20.8-b03-424"/>
     <property name="awt.nativeDoubleBuffering" value="true"/>
     <property name="gopherProxySet" value="false"/>
-    <property name="mrj.build" value="11M3635"/>
+    <property name="mrj.build" value="11M3720"/>
     <property name="java.vm.vendor" value="Apple Inc."/>
     <property name="java.vendor.url" value="http://www.apple.com/"/>
     <property name="path.separator" value=":"/>
@@ -16,18 +16,19 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
+    <property name="test" value="com.bia.gmailjava.EmailServiceImplTest"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/Users/intesar/NetBeansProjects/GMailJava"/>
-    <property name="java.runtime.version" value="1.6.0_31-b04-415-11M3635"/>
+    <property name="user.dir" value="/Users/mdshannan/NetBeansProjects/github/GMailJava"/>
+    <property name="java.runtime.version" value="1.6.0_33-b03-424-11M3720"/>
     <property name="java.awt.graphicsenv" value="apple.awt.CGraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/endorsed"/>
     <property name="os.arch" value="x86_64"/>
-    <property name="java.io.tmpdir" value="/var/folders/0l/l38fch5j6872y82rzm5yl5q40000gn/T/"/>
+    <property name="java.io.tmpdir" value="/var/folders/lz/rx_qdq0d1k14gcvsq_3kxqqc0000gn/T/"/>
     <property name="line.separator" value="
 "/>
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="os.name" value="Mac OS X"/>
-    <property name="classworlds.conf" value="/Applications/NetBeans/NetBeans 7.1.1.app/Contents/Resources/NetBeans/java/maven/bin/m2.conf"/>
+    <property name="classworlds.conf" value="/Applications/NetBeans/NetBeans 7.2 RC1.app/Contents/Resources/NetBeans/java/maven/bin/m2.conf"/>
     <property name="sun.jnu.encoding" value="MacRoman"/>
     <property name="java.library.path" value=".:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -35,35 +36,35 @@
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="os.version" value="10.7.4"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
-    <property name="user.home" value="/Users/intesar"/>
+    <property name="user.home" value="/Users/mdshannan"/>
     <property name="user.timezone" value="America/Los_Angeles"/>
     <property name="java.awt.printerjob" value="apple.awt.CPrinterJob"/>
     <property name="java.specification.version" value="1.6"/>
     <property name="file.encoding" value="MacRoman"/>
-    <property name="user.name" value="intesar"/>
-    <property name="java.class.path" value="/Applications/NetBeans/NetBeans 7.1.1.app/Contents/Resources/NetBeans/java/maven/boot/plexus-classworlds-2.4.jar"/>
+    <property name="user.name" value="mdshannan"/>
+    <property name="java.class.path" value="/Applications/NetBeans/NetBeans 7.2 RC1.app/Contents/Resources/NetBeans/java/maven/boot/plexus-classworlds-2.4.jar"/>
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=com.bia.gmailjava.EmailServiceImplTest test-compile surefire:test"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.language" value="en"/>
     <property name="awt.toolkit" value="apple.awt.CToolkit"/>
     <property name="java.vm.info" value="mixed mode"/>
-    <property name="java.version" value="1.6.0_31"/>
+    <property name="java.version" value="1.6.0_33"/>
     <property name="java.ext.dirs" value="/Library/Java/Extensions:/System/Library/Java/Extensions:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext"/>
     <property name="sun.boot.class.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsfd.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/ui.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/laf.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/sunrsasign.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar"/>
     <property name="java.vendor" value="Apple Inc."/>
-    <property name="maven.home" value="/Applications/NetBeans/NetBeans 7.1.1.app/Contents/Resources/NetBeans/java/maven"/>
+    <property name="maven.home" value="/Applications/NetBeans/NetBeans 7.2 RC1.app/Contents/Resources/NetBeans/java/maven"/>
     <property name="file.separator" value="/"/>
     <property name="java.vendor.url.bug" value="http://bugreport.apple.com/"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
-    <property name="mrj.version" value="1070.1.6.0_31-415"/>
+    <property name="mrj.version" value="1070.1.6.0_33-424"/>
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.593" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_1"/>
+  <testcase time="0.014" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_1"/>
   <testcase time="0" classname="com.bia.gmailjava.EmailServiceImplTest" name="testSendEmail_3args_2"/>
 </testsuite>
