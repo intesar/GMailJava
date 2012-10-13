@@ -188,10 +188,11 @@ public class EmailService {
         if (bcc != null) {
             return bcc;
         }
-        if ( BCC_EMAIL_LIST.length > 0 && BCC_EMAIL_LIST[0].equals(DUMMY_EMAIL)) {
+        if ( BCC_EMAIL_LIST.length > 0 && !BCC_EMAIL_LIST[0].equals(DUMMY_EMAIL)) {
             bcc = new InternetAddress[BCC_EMAIL_LIST.length];
+            int index = 0;
             for (String email : BCC_EMAIL_LIST ) {
-                bcc[0] = new InternetAddress(email);
+                bcc[index++] = new InternetAddress(email);
             }
             
         } else {
