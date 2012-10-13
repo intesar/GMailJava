@@ -32,13 +32,6 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 public class EmailService {
 
-    // all emails will be copied to bcc addresses if set true
-//    final static boolean ENABLE_BCC = Boolean.TRUE;
-//    final static String DUMMY_EMAIL = "dummy@dummy.com";
-//    final static String[] BCC_EMAIL_LIST = {DUMMY_EMAIL}; // remove dummy and add emails
-    // threads used
-//    final static int MAX_THREADS = 2;
-//    final static int DELAY_MILLISECONDS = 1;
     final static String EMAIL_CONTENT_TYPE = "text/html";
     final static String SMTP_HOST_NAME = "smtp.gmail.com";
     final static String SMTP_PORT = "465";
@@ -51,15 +44,11 @@ public class EmailService {
 
     
     //private static Logger logger = Logger.getLogger(EmailService.class);
-//    private static final EmailService instance = new EmailService();
     private ExecutorService executor;
     private String username;
     private String password;
     private String[] bccs;
 
-//    private EmailService() {
-//        executor = new ScheduledThreadPoolExecutor(MAX_THREADS);
-//    }
     public EmailService(String username, String password, String[] bccs, ExecutorService executor) {
         this.username = username;
         this.password = password;
@@ -67,9 +56,6 @@ public class EmailService {
         this.executor = executor;
     }
     
-//    public static EmailService getInstance() {
-//        return instance;
-//    }
     /**
      * Sends async email to one recipient Returns true if email send
      * successfully, otherwise returns false for all errors including invalid
