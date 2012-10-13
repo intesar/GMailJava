@@ -35,13 +35,7 @@ enum Credentials {
 
     // just set the username / password
     USERNAME("<example@gmail.com>"), // TODO
-    PASSWORD("<password>"), // TODO   
-    BCC_EMAIL("<example@yahoo.com>"), // TODO
-
-    EMAIL_CONTENT_TYPE("text/html"),
-    SMTP_HOST_NAME("smtp.gmail.com"),
-    SMTP_PORT("465"),
-    SSL_FACTORY("javax.net.ssl.SSLSocketFactory");
+    PASSWORD("<password>"); // TODO   
 
     Credentials(String val) {
         this.val = val;
@@ -56,12 +50,27 @@ enum Credentials {
 
 public class EmailService {
 
+    // all emails will be copied to bcc addresses if set true
+    final static boolean ENABLE_BCC = Boolean.TRUE;
+    final static String DUMMY_EMAIL = "dummy@dummy.com";
+    final static String[] BCC_EMAIL_LIST = {DUMMY_EMAIL}; // remove dummy and add emails
+    // threads used
+    final static int MAX_THREADS = 2;
+    final static int DELAY_MILLISECONDS = 1;
+    
+    final static String EMAIL_CONTENT_TYPE = "text/html";
+    final static String SMTP_HOST_NAME = "smtp.gmail.com";
+    final static String SMTP_PORT = "465";
+    final static String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    final static String TRUE = "true";
+    final static String FALSE = "false";
+    
     //private static Logger logger = Logger.getLogger(EmailService.class);
     private static final EmailService instance = new EmailService();
     private ScheduledThreadPoolExecutor executor;
-
+    
     private EmailService() {
-        executor = new ScheduledThreadPoolExecutor(2);
+        executor = new ScheduledThreadPoolExecutor(MAX_THREADS);
     }
     private Session session;
     // If require enable it
@@ -72,7 +81,8 @@ public class EmailService {
     }
 
     /**
-     *
+     * Sends async email to one recipient
+     * Returns true if email send successfully, otherwise returns false for all errors including invalid input
      * @param toAddress
      * @param subject
      * @param body
@@ -86,17 +96,18 @@ public class EmailService {
         String[] to = {toAddress};
         // Aysnc send email
         Runnable emailServiceAsync = new EmailServiceAsync(to, subject, body);
-        this.executor.schedule(emailServiceAsync, 1, TimeUnit.MILLISECONDS);
+        this.executor.schedule(emailServiceAsync, DELAY_MILLISECONDS, TimeUnit.MILLISECONDS);
 
         return true;
     }
 
     /**
-     *
+     * Sends async email to multiple recipients
+     * Returns true if email send successfully, otherwise returns false for all errors including invalid input
      * @param toAddresses
      * @param subject
      * @param body
-     * @return true email send, false invalid input
+     * @return 
      */
     public boolean sendEmail(String[] toAddresses, String subject, String body) {
         if (!isValidEmail(toAddresses) || !isValidSubject(subject)) {
@@ -113,7 +124,7 @@ public class EmailService {
 
     /**
      *
-     * Aysnc send emails using command pattern
+     * Send aysnc emails using command pattern
      *
      */
     private class EmailServiceAsync implements Runnable {
@@ -147,13 +158,14 @@ public class EmailService {
         }
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", Credentials.SMTP_HOST_NAME.toString());
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.debug", "false");
-        props.put("mail.smtp.port", Credentials.SMTP_PORT.toString());
-        props.put("mail.smtp.socketFactory.port", Credentials.SMTP_PORT.toString());
-        props.put("mail.smtp.socketFactory.class", Credentials.SSL_FACTORY.toString());
-        props.put("mail.smtp.socketFactory.fallback", "false");
+        props.put("mail.smtp.host", SMTP_HOST_NAME);
+        props.put("mail.smtp.auth", TRUE);
+        props.put("mail.debug", FALSE);
+        props.put("mail.smtp.port", SMTP_PORT);
+        props.put("mail.smtp.socketFactory.port", SMTP_PORT);
+        props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.put("mail.smtp.socketFactory.fallback", FALSE);
+        
         session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     @Override
@@ -176,9 +188,12 @@ public class EmailService {
         if (bcc != null) {
             return bcc;
         }
-        if (!Credentials.BCC_EMAIL.toString().equals("<example@yahoo.com>") && isValidEmail(Credentials.BCC_EMAIL.toString())) {
-            bcc = new InternetAddress[1];
-            bcc[0] = new InternetAddress(Credentials.BCC_EMAIL.toString());
+        if ( BCC_EMAIL_LIST.length > 0 && BCC_EMAIL_LIST[0].equals(DUMMY_EMAIL)) {
+            bcc = new InternetAddress[BCC_EMAIL_LIST.length];
+            for (String email : BCC_EMAIL_LIST ) {
+                bcc[0] = new InternetAddress(email);
+            }
+            
         } else {
             bcc = new InternetAddress[0];
         }
@@ -228,15 +243,17 @@ public class EmailService {
         msg.setRecipients(Message.RecipientType.TO, addressTo);
 
         // set bcc
-        InternetAddress[] bcc1 = getBCC();
-        if (bcc1 != null && bcc1.length > 0) {
-            msg.setRecipients(Message.RecipientType.BCC, bcc1);
+        if ( ENABLE_BCC ) {
+            InternetAddress[] bcc1 = getBCC();
+            if (bcc1 != null && bcc1.length > 0) {
+                msg.setRecipients(Message.RecipientType.BCC, bcc1);
+            }
         }
 
         // Setting the Subject and Content Type
         msg.setSubject(subject);
         //String message = comment;
-        msg.setContent(message, Credentials.EMAIL_CONTENT_TYPE.toString());
+        msg.setContent(message, EMAIL_CONTENT_TYPE);
 
         Transport.send(msg);
     }
@@ -260,6 +277,7 @@ public class EmailService {
     }
 
     /**
+     * checks for blank and null
      *
      * @param subject cannot be empty
      * @return
