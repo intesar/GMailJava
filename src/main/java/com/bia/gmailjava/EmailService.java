@@ -20,8 +20,7 @@ package com.bia.gmailjava;
  * @author intesar mohammed mdshannan@gmail.com
  */
 import java.util.Properties;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -31,33 +30,15 @@ import org.apache.commons.validator.routines.EmailValidator;
 // uncomment log4j if you already have
 //import org.apache.log4j.Logger;
 
-enum Credentials {
-
-    // just set the username / password
-    USERNAME("<example@gmail.com>"), // TODO
-    PASSWORD("<password>"); // TODO   
-
-    Credentials(String val) {
-        this.val = val;
-    }
-    private String val;
-
-    @Override
-    public String toString() {
-        return val;
-    }
-}
-
 public class EmailService {
 
     // all emails will be copied to bcc addresses if set true
-    final static boolean ENABLE_BCC = Boolean.TRUE;
-    final static String DUMMY_EMAIL = "dummy@dummy.com";
-    final static String[] BCC_EMAIL_LIST = {DUMMY_EMAIL}; // remove dummy and add emails
+//    final static boolean ENABLE_BCC = Boolean.TRUE;
+//    final static String DUMMY_EMAIL = "dummy@dummy.com";
+//    final static String[] BCC_EMAIL_LIST = {DUMMY_EMAIL}; // remove dummy and add emails
     // threads used
-    final static int MAX_THREADS = 2;
-    final static int DELAY_MILLISECONDS = 1;
-    
+//    final static int MAX_THREADS = 2;
+//    final static int DELAY_MILLISECONDS = 1;
     final static String EMAIL_CONTENT_TYPE = "text/html";
     final static String SMTP_HOST_NAME = "smtp.gmail.com";
     final static String SMTP_PORT = "465";
@@ -65,61 +46,64 @@ public class EmailService {
     final static String TRUE = "true";
     final static String FALSE = "false";
     
-    //private static Logger logger = Logger.getLogger(EmailService.class);
-    private static final EmailService instance = new EmailService();
-    private ScheduledThreadPoolExecutor executor;
-    
-    private EmailService() {
-        executor = new ScheduledThreadPoolExecutor(MAX_THREADS);
-    }
     private Session session;
-    // If require enable it
     private InternetAddress[] bcc;
 
-    public static EmailService getInstance() {
-        return instance;
-    }
+    
+    //private static Logger logger = Logger.getLogger(EmailService.class);
+//    private static final EmailService instance = new EmailService();
+    private ExecutorService executor;
+    private String username;
+    private String password;
+    private String[] bccs;
 
+//    private EmailService() {
+//        executor = new ScheduledThreadPoolExecutor(MAX_THREADS);
+//    }
+    public EmailService(String username, String password, String[] bccs, ExecutorService executor) {
+        this.username = username;
+        this.password = password;
+        this.bccs = bccs;
+        this.executor = executor;
+    }
+    
+//    public static EmailService getInstance() {
+//        return instance;
+//    }
     /**
-     * Sends async email to one recipient
-     * Returns true if email send successfully, otherwise returns false for all errors including invalid input
+     * Sends async email to one recipient Returns true if email send
+     * successfully, otherwise returns false for all errors including invalid
+     * input
+     *
      * @param toAddress
      * @param subject
      * @param body
      * @return true email send, false invalid input
      */
-    public boolean sendEmail(String toAddress, String subject, String body) {
-        if (!isValidEmail(toAddress) || !isValidSubject(subject)) {
-            return false;
-        }
-
-        String[] to = {toAddress};
+    public void sendEmail(String toAddress, String subject, String body) {
+        String[] toAddresses = {toAddress};
+        validate(subject, toAddresses);
         // Aysnc send email
-        Runnable emailServiceAsync = new EmailServiceAsync(to, subject, body);
-        this.executor.schedule(emailServiceAsync, DELAY_MILLISECONDS, TimeUnit.MILLISECONDS);
+        Runnable emailServiceAsync = new EmailServiceAsync(toAddresses, subject, body);
+        executor.execute(emailServiceAsync);
 
-        return true;
     }
 
     /**
-     * Sends async email to multiple recipients
-     * Returns true if email send successfully, otherwise returns false for all errors including invalid input
+     * Sends async email to multiple recipients Returns true if email send
+     * successfully, otherwise returns false for all errors including invalid
+     * input
+     *
      * @param toAddresses
      * @param subject
      * @param body
-     * @return 
+     * @return
      */
-    public boolean sendEmail(String[] toAddresses, String subject, String body) {
-        if (!isValidEmail(toAddresses) || !isValidSubject(subject)) {
-            return false;
-        }
-
+    public void sendEmail(String[] toAddresses, String subject, String body) {
+        validate(subject, toAddresses);
         // Aysnc send email
         Runnable emailServiceAsync = new EmailServiceAsync(toAddresses, subject, body);
-        this.executor.schedule(emailServiceAsync, 1, TimeUnit.MILLISECONDS);
-
-        return true;
-
+        executor.execute(emailServiceAsync);
     }
 
     /**
@@ -165,12 +149,12 @@ public class EmailService {
         props.put("mail.smtp.socketFactory.port", SMTP_PORT);
         props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
         props.put("mail.smtp.socketFactory.fallback", FALSE);
-        
+
         session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(Credentials.USERNAME.toString(), Credentials.PASSWORD.toString());
+                        return new PasswordAuthentication(username, password);
                     }
                 });
 
@@ -188,13 +172,13 @@ public class EmailService {
         if (bcc != null) {
             return bcc;
         }
-        if ( BCC_EMAIL_LIST.length > 0 && !BCC_EMAIL_LIST[0].equals(DUMMY_EMAIL)) {
-            bcc = new InternetAddress[BCC_EMAIL_LIST.length];
+        if (bccs != null && bccs.length > 0) {
+            bcc = new InternetAddress[bccs.length];
             int index = 0;
-            for (String email : BCC_EMAIL_LIST ) {
+            for (String email : bccs) {
                 bcc[index++] = new InternetAddress(email);
             }
-            
+
         } else {
             bcc = new InternetAddress[0];
         }
@@ -239,17 +223,16 @@ public class EmailService {
      */
     private void send(InternetAddress[] addressTo, String subject, String message) throws AddressException, MessagingException {
         Message msg = new MimeMessage(createSession());
-        InternetAddress addressFrom = new InternetAddress(Credentials.USERNAME.toString());
+        InternetAddress addressFrom = new InternetAddress(username);
         msg.setFrom(addressFrom);
         msg.setRecipients(Message.RecipientType.TO, addressTo);
 
         // set bcc
-        if ( ENABLE_BCC ) {
-            InternetAddress[] bcc1 = getBCC();
-            if (bcc1 != null && bcc1.length > 0) {
-                msg.setRecipients(Message.RecipientType.BCC, bcc1);
-            }
+        InternetAddress[] bcc_ = getBCC();
+        if (bcc_ != null && bcc_.length > 0) {
+            msg.setRecipients(Message.RecipientType.BCC, bcc_);
         }
+
 
         // Setting the Subject and Content Type
         msg.setSubject(subject);
@@ -258,8 +241,31 @@ public class EmailService {
 
         Transport.send(msg);
     }
+    
+    /**
+     * validates subject and to email addresses
+     * @param subject
+     * @param emails 
+     */
+    private void validate(String subject, String... emails) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean valid = true;
+        if (!isValidSubject(subject)) {
+            stringBuilder.append("Invalid subject, ");
+            valid = false;
+        }
+        
+        if (!isValidEmail(emails)) {
+            stringBuilder.append("Invalid email address");
+            valid = false;
+        }
+        
+        if ( !valid ) {
+            throw new RuntimeException(stringBuilder.toString());
+        }
+    }
 
-     /**
+    /**
      * validates email/emails
      *
      * @param emails
@@ -286,7 +292,7 @@ public class EmailService {
     private boolean isValidSubject(String subject) {
         return !GenericValidator.isBlankOrNull(subject);
     }
-    
+
     /**
      *
      * @throws Throwable
@@ -307,7 +313,7 @@ public class EmailService {
      */
     public void shutdown() {
         // releasing executor
-        this.executor.shutdown();
+        executor.shutdown();
         // logger.trace("EmailService executor released!");
         System.out.println("EmailService exector released!");
 
