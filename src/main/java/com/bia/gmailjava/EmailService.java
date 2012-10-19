@@ -16,7 +16,10 @@
 package com.bia.gmailjava;
 
 /**
- *
+ * <p> EmailService uses Gmail smtp to send mails to one or more recipients. <p>
+ * <p> sendEmail() method is async and no of worker threads can be configured during instantiation</p>
+ * <p> Use one of the four constructor's to instantiate EmailService </p>
+ * <p> EmailService can also be instantiated using google-domain email e.g intesar@bizintelapps.com <p>
  * @author intesar mohammed mdshannan@gmail.com
  */
 import java.util.Properties;
