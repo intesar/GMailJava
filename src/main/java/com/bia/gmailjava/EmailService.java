@@ -21,6 +21,7 @@ package com.bia.gmailjava;
  */
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -38,17 +39,22 @@ public class EmailService {
     final static String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
     final static String TRUE = "true";
     final static String FALSE = "false";
-    
+    final static int ONE = 1;
     private Session session;
     private InternetAddress[] bcc;
-
-    
     //private static Logger logger = Logger.getLogger(EmailService.class);
     private ExecutorService executor;
     private String username;
     private String password;
     private String[] bccs;
 
+    /**
+     * <p> Use this constructor if you want to set bcc and executor </p>
+     * @param username cannot be null, should be valid gmail or google-domain username
+     * @param password cannot be null, 
+     * @param bccs cannot be null
+     * @param executor cannot be null
+     */
     public EmailService(String username, String password, String[] bccs, ExecutorService executor) {
         this.username = username;
         this.password = password;
@@ -56,6 +62,41 @@ public class EmailService {
         this.executor = executor;
     }
     
+    /**
+     * <p> Use this constructor if you want to set executor </p>
+     * <p> Instantiate with username, password and executor </p>
+     * @param username cannot be null
+     * @param password cannot be null
+     * @param executor cannot be null
+     */
+    public EmailService(String username, String password, ExecutorService executor) {
+        this.username = username;
+        this.password = password;
+        this.executor = executor;
+    }
+    
+    /**
+     * <p> Minimalist constructor, sets executor to default </p>
+     * @param username cannot be null
+     * @param password cannot be null
+     */
+    public EmailService(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.executor = Executors.newFixedThreadPool(ONE);
+    }
+    
+    /**
+     * <p> Use this constructor to just set bcc, sets executor to default </p>
+     * @param username cannot be null
+     * @param password cannot be null
+     */
+    public EmailService(String username, String password, String[] bccs) {
+        this.username = username;
+        this.password = password;
+        this.bccs = bccs;
+    }
+
     /**
      * Sends async email to one recipient Returns true if email send
      * successfully, otherwise returns false for all errors including invalid
@@ -93,29 +134,18 @@ public class EmailService {
     }
 
     /**
-     *
-     * Send aysnc emails using command pattern
-     *
+     * call this method from ServletContextListener.contextDestroyed() This will
+     * release all work thread's when your app is undeployed
      */
-    private class EmailServiceAsync implements Runnable {
+    public void shutdown() {
+        // releasing executor
+        executor.shutdown();
+        // logger.trace("EmailService executor released!");
+        System.out.println("EmailService exector released!");
 
-        private String recipients[];
-        private String subject;
-        private String message;
-
-        EmailServiceAsync(String recipients[], String subject,
-                String message) {
-            this.recipients = recipients;
-            this.subject = subject;
-            this.message = message;
-        }
-
-        @Override
-        public void run() {
-            EmailService.this.sendSSMessage(recipients, subject, message);
-        }
     }
 
+    
     /**
      * session is created only once
      *
@@ -227,11 +257,12 @@ public class EmailService {
 
         Transport.send(msg);
     }
-    
+
     /**
      * validates subject and to email addresses
+     *
      * @param subject
-     * @param emails 
+     * @param emails
      */
     private void validate(String subject, String... emails) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -240,13 +271,13 @@ public class EmailService {
             stringBuilder.append("Invalid subject, ");
             valid = false;
         }
-        
+
         if (!isValidEmail(emails)) {
             stringBuilder.append("Invalid email address");
             valid = false;
         }
-        
-        if ( !valid ) {
+
+        if (!valid) {
             throw new RuntimeException(stringBuilder.toString());
         }
     }
@@ -294,14 +325,26 @@ public class EmailService {
     }
 
     /**
-     * call this method from ServletContextListener.contextDestroyed() This will
-     * release all work thread's when your app is undeployed
+     *
+     * Send aysnc emails using command pattern
+     *
      */
-    public void shutdown() {
-        // releasing executor
-        executor.shutdown();
-        // logger.trace("EmailService executor released!");
-        System.out.println("EmailService exector released!");
+    private class EmailServiceAsync implements Runnable {
 
+        private String recipients[];
+        private String subject;
+        private String message;
+
+        EmailServiceAsync(String recipients[], String subject,
+                String message) {
+            this.recipients = recipients;
+            this.subject = subject;
+            this.message = message;
+        }
+
+        @Override
+        public void run() {
+            EmailService.this.sendSSMessage(recipients, subject, message);
+        }
     }
 }

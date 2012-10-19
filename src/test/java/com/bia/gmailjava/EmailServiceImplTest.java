@@ -37,42 +37,45 @@ public class EmailServiceImplTest {
 
     @Before
     public void setUp() {
-        instance = new EmailService(null, null, null, Executors.newFixedThreadPool(1));
+        
     }
 
     @After
     public void tearDown() {
     }
-    private EmailService instance;
+       final String EMAIL = "mdshannan@gmail.com";
 
     /**
      * Test of sendEmail method, of class EmailService.
      */
     @Test
     public void testSendEmail_3args_1() {
+        
         System.out.println("sendEmail");
-
+        
+        EmailService instance = new EmailService(EMAIL, null, null, Executors.newFixedThreadPool(1));
+        
         String toAddress = "mdshannan@gmail.com";
         String subject = "testing yahoo send";
         String body = "testing body";
 
-        check(toAddress, subject, body, true); // all valid
-        check(toAddress, subject, "", true); // optional body missing
-        check(toAddress, subject, null, true); // optional body missing
-        check(toAddress, subject, " ", true); // optional body missing
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, "", true); // optional body missing
+        check(instance, toAddress, subject, null, true); // optional body missing
+        check(instance, toAddress, subject, " ", true); // optional body missing
 
-        check(toAddress, "", body, false); // subject missing
-        check(toAddress, null, body, false); // subject missing
-        check(toAddress, "  ", body, false); // subject missing
+        check(instance, toAddress, "", body, false); // subject missing
+        check(instance, toAddress, null, body, false); // subject missing
+        check(instance, toAddress, "  ", body, false); // subject missing
 
         String toAddress0 = null;
-        check(toAddress0, subject, body, false); // subject missing
+        check(instance, toAddress0, subject, body, false); // subject missing
         String toAddress1 = "mdshannan@gmail";
-        check(toAddress1, subject, body, false); // subject missing
+        check(instance, toAddress1, subject, body, false); // subject missing
         String toAddress2 = "mdshannan";
-        check(toAddress2, subject, body, false); // subject missing
+        check(instance, toAddress2, subject, body, false); // subject missing
         String toAddress3 = "";
-        check(toAddress3, subject, body, false); // subject missing
+        check(instance, toAddress3, subject, body, false); // subject missing
     }
 
     /**
@@ -81,6 +84,9 @@ public class EmailServiceImplTest {
     @Test
     public void testSendEmail_3args_2() {
         System.out.println("sendEmail");
+        
+        EmailService instance = new EmailService(EMAIL, null, null, Executors.newFixedThreadPool(1));
+        
         String[] toAddress = {"mdshannan@gmail.com"};
         String subject = "testing yahoo send";
         String body = "testing body";
@@ -88,26 +94,230 @@ public class EmailServiceImplTest {
         String SPACE = " ";
         String NULL = null;
 
-        check(toAddress, subject, body, true); // all valid
-        check(toAddress, subject, EMPTY, true); // optional body missing
-        check(toAddress, subject, NULL, true); // optional body missing
-        check(toAddress, subject, SPACE, true); // optional body missing
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, EMPTY, true); // optional body missing
+        check(instance, toAddress, subject, NULL, true); // optional body missing
+        check(instance, toAddress, subject, SPACE, true); // optional body missing
 
-        check(toAddress, EMPTY, body, false); // subject missing
-        check(toAddress, NULL, body, false); // subject missing
-        check(toAddress, SPACE, body, false); // subject missing
+        check(instance, toAddress, EMPTY, body, false); // subject missing
+        check(instance, toAddress, NULL, body, false); // subject missing
+        check(instance, toAddress, SPACE, body, false); // subject missing
 
         String[] toAddress0 = null;
-        check(toAddress0, subject, body, false); // TO missing
+        check(instance, toAddress0, subject, body, false); // TO missing
         String[] toAddress1 = {"mdshannan@gmail"};
-        check(toAddress1, subject, body, false); // no .com 
+        check(instance, toAddress1, subject, body, false); // no .com 
         String[] toAddress2 = {"mdshannan"};
-        check(toAddress2, subject, body, false); // invalid email 
+        check(instance, toAddress2, subject, body, false); // invalid email 
         String[] toAddress3 = {""};
-        check(toAddress3, subject, body, false); // email missing
+        check(instance, toAddress3, subject, body, false); // email missing
+    }
+    
+    
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_2() {
+        
+        System.out.println("sendEmail");
+        String []bcc = {"mdshannan@gmail.com"};
+        EmailService instance = new EmailService(EMAIL, null, bcc);
+        
+        String toAddress = "mdshannan@gmail.com";
+        String subject = "testing yahoo send";
+        String body = "testing body";
+
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, "", true); // optional body missing
+        check(instance, toAddress, subject, null, true); // optional body missing
+        check(instance, toAddress, subject, " ", true); // optional body missing
+
+        check(instance, toAddress, "", body, false); // subject missing
+        check(instance, toAddress, null, body, false); // subject missing
+        check(instance, toAddress, "  ", body, false); // subject missing
+
+        String toAddress0 = null;
+        check(instance, toAddress0, subject, body, false); // subject missing
+        String toAddress1 = "mdshannan@gmail";
+        check(instance, toAddress1, subject, body, false); // subject missing
+        String toAddress2 = "mdshannan";
+        check(instance, toAddress2, subject, body, false); // subject missing
+        String toAddress3 = "";
+        check(instance, toAddress3, subject, body, false); // subject missing
     }
 
-    private void check(String to, String subject, String body, boolean expResult) {
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_3() {
+        System.out.println("sendEmail");
+        String []bcc = {"mdshannan@gmail.com"};
+        EmailService instance = new EmailService(EMAIL, null, bcc);
+        
+        String[] toAddress = {"mdshannan@gmail.com"};
+        String subject = "testing yahoo send";
+        String body = "testing body";
+        String EMPTY = "";
+        String SPACE = " ";
+        String NULL = null;
+
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, EMPTY, true); // optional body missing
+        check(instance, toAddress, subject, NULL, true); // optional body missing
+        check(instance, toAddress, subject, SPACE, true); // optional body missing
+
+        check(instance, toAddress, EMPTY, body, false); // subject missing
+        check(instance, toAddress, NULL, body, false); // subject missing
+        check(instance, toAddress, SPACE, body, false); // subject missing
+
+        String[] toAddress0 = null;
+        check(instance, toAddress0, subject, body, false); // TO missing
+        String[] toAddress1 = {"mdshannan@gmail"};
+        check(instance, toAddress1, subject, body, false); // no .com 
+        String[] toAddress2 = {"mdshannan"};
+        check(instance, toAddress2, subject, body, false); // invalid email 
+        String[] toAddress3 = {""};
+        check(instance, toAddress3, subject, body, false); // email missing
+    }
+    
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_4() {
+        
+        System.out.println("sendEmail");
+        EmailService instance = new EmailService(EMAIL, null, Executors.newFixedThreadPool(1));
+        
+        String toAddress = "mdshannan@gmail.com";
+        String subject = "testing yahoo send";
+        String body = "testing body";
+
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, "", true); // optional body missing
+        check(instance, toAddress, subject, null, true); // optional body missing
+        check(instance, toAddress, subject, " ", true); // optional body missing
+
+        check(instance, toAddress, "", body, false); // subject missing
+        check(instance, toAddress, null, body, false); // subject missing
+        check(instance, toAddress, "  ", body, false); // subject missing
+
+        String toAddress0 = null;
+        check(instance, toAddress0, subject, body, false); // subject missing
+        String toAddress1 = "mdshannan@gmail";
+        check(instance, toAddress1, subject, body, false); // subject missing
+        String toAddress2 = "mdshannan";
+        check(instance, toAddress2, subject, body, false); // subject missing
+        String toAddress3 = "";
+        check(instance, toAddress3, subject, body, false); // subject missing
+    }
+
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_5() {
+        System.out.println("sendEmail");
+        
+        EmailService instance = new EmailService(EMAIL, null, Executors.newFixedThreadPool(1));
+        
+        String[] toAddress = {"mdshannan@gmail.com"};
+        String subject = "testing yahoo send";
+        String body = "testing body";
+        String EMPTY = "";
+        String SPACE = " ";
+        String NULL = null;
+
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, EMPTY, true); // optional body missing
+        check(instance, toAddress, subject, NULL, true); // optional body missing
+        check(instance, toAddress, subject, SPACE, true); // optional body missing
+
+        check(instance, toAddress, EMPTY, body, false); // subject missing
+        check(instance, toAddress, NULL, body, false); // subject missing
+        check(instance, toAddress, SPACE, body, false); // subject missing
+
+        String[] toAddress0 = null;
+        check(instance, toAddress0, subject, body, false); // TO missing
+        String[] toAddress1 = {"mdshannan@gmail"};
+        check(instance, toAddress1, subject, body, false); // no .com 
+        String[] toAddress2 = {"mdshannan"};
+        check(instance, toAddress2, subject, body, false); // invalid email 
+        String[] toAddress3 = {""};
+        check(instance, toAddress3, subject, body, false); // email missing
+    }
+    
+    
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_6() {
+        
+        System.out.println("sendEmail");
+        EmailService instance = new EmailService(EMAIL, null);
+        
+        String toAddress = "mdshannan@gmail.com";
+        String subject = "testing yahoo send";
+        String body = "testing body";
+
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, "", true); // optional body missing
+        check(instance, toAddress, subject, null, true); // optional body missing
+        check(instance, toAddress, subject, " ", true); // optional body missing
+
+        check(instance, toAddress, "", body, false); // subject missing
+        check(instance, toAddress, null, body, false); // subject missing
+        check(instance, toAddress, "  ", body, false); // subject missing
+
+        String toAddress0 = null;
+        check(instance, toAddress0, subject, body, false); // subject missing
+        String toAddress1 = "mdshannan@gmail";
+        check(instance, toAddress1, subject, body, false); // subject missing
+        String toAddress2 = "mdshannan";
+        check(instance, toAddress2, subject, body, false); // subject missing
+        String toAddress3 = "";
+        check(instance, toAddress3, subject, body, false); // subject missing
+    }
+
+    /**
+     * Test of sendEmail method, of class EmailService.
+     */
+    @Test
+    public void testSendEmail_7() {
+        System.out.println("sendEmail");
+        
+        EmailService instance = new EmailService(EMAIL, null);
+        
+        String[] toAddress = {"mdshannan@gmail.com"};
+        String subject = "testing yahoo send";
+        String body = "testing body";
+        String EMPTY = "";
+        String SPACE = " ";
+        String NULL = null;
+
+        check(instance, toAddress, subject, body, true); // all valid
+        check(instance, toAddress, subject, EMPTY, true); // optional body missing
+        check(instance, toAddress, subject, NULL, true); // optional body missing
+        check(instance, toAddress, subject, SPACE, true); // optional body missing
+
+        check(instance, toAddress, EMPTY, body, false); // subject missing
+        check(instance, toAddress, NULL, body, false); // subject missing
+        check(instance, toAddress, SPACE, body, false); // subject missing
+
+        String[] toAddress0 = null;
+        check(instance, toAddress0, subject, body, false); // TO missing
+        String[] toAddress1 = {"mdshannan@gmail"};
+        check(instance, toAddress1, subject, body, false); // no .com 
+        String[] toAddress2 = {"mdshannan"};
+        check(instance, toAddress2, subject, body, false); // invalid email 
+        String[] toAddress3 = {""};
+        check(instance, toAddress3, subject, body, false); // email missing
+    }
+
+    private void check(EmailService instance, String to, String subject, String body, boolean expResult) {
         try {
             instance.sendEmail(to, subject, body);
             if (!expResult) {
@@ -117,7 +327,7 @@ public class EmailServiceImplTest {
         }
     }
 
-    private void check(String[] to, String subject, String body, boolean expResult) {
+    private void check(EmailService instance, String[] to, String subject, String body, boolean expResult) {
         try {
             instance.sendEmail(to, subject, body);
             if (!expResult) {

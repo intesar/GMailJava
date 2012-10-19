@@ -21,15 +21,27 @@
     code: https://github.com/intesar/GMailJava/blob/master/src/main/java/com/bia/gmailjava/EmailService.java
 
     Note: Enable pop, IMAP inside GMail --> Settings --> Forwarding and POP / IMAP
+    
     Sample code
 
-      String[] bcc = {"somename@yahoo.com"}; // only if you want emails to bcc otherwise pass null
-      EmailService emailService = new EmailService("somename@gmail.com", "somepassword", bcc, Executors.newFixedThreadPool(1));
-
-      emailService.sendEmail("<toemail>", "<subject>", "<body>");
+        // Instantiate using one of the four overloaded constructor
+        // Sample 1
+        EmailService emailService1 = new EmailService(email, pass);
+        
+        // Sample 2
+        EmailService emailService2 = new EmailService(email, pass, Executors.newFixedThreadPool(1));
+        
+        // Sample 3
+        EmailService emailService3 = new EmailService(email, pass, bcc);
+        
+        // Sample 4
+        EmailService emailService4 = new EmailService(email, pass, bcc, Executors.newFixedThreadPool(1));
+        
+        // send email using of the overloaded methods
+        emailService4.sendEmail(to, subject, body);
 
     Design Decisions
      No interface is define to keep simpler eco-system, feel free to add yours if required and refactor code accordingly
-     Pattern's & Technique's used - Singleton, Command, Async, Inner class
+     Pattern's & Technique's used - Command, Async, Inner class, Test first
      
      

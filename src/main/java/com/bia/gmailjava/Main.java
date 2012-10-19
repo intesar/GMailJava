@@ -23,13 +23,30 @@ import java.util.concurrent.Executors;
  */
 public class Main {
     public static void main(String[] args) {
-        String[] bcc = {"somename@yahoo.com"}; // only if you want emails to bcc otherwise pass null
-        EmailService emailService = new EmailService("somename@gmail.com", "somepassword", bcc, Executors.newFixedThreadPool(1));
         
-        emailService.sendEmail("mdshannan@gmail.com", "test subject from GMailJava ", "test body");
+        String email = "<<user@gmail.com>>";
+        String pass = "<<password>>";
+        String subject = "<<subject>>";
+        String body = "<<body>>";
+        String to = "<<email@yahoo.com>>";
+        String[] bcc = {"somename@yahoo.com"}; // only if you want emails to bcc otherwise use other constructor
         
-        System.out.println("done!");
+        // Sample 1
+        EmailService emailService1 = new EmailService(email, pass);
+        emailService1.sendEmail(to, subject, body);
         
-        emailService.shutdown();
+        // Sample 2
+        EmailService emailService2 = new EmailService(email, pass, Executors.newFixedThreadPool(1));
+        emailService2.sendEmail(to, subject, body);
+        
+        // Sample 3
+        EmailService emailService3 = new EmailService(email, pass, bcc);
+        emailService3.sendEmail(to, subject, body);
+        
+        // Sample 4
+        
+        EmailService emailService4 = new EmailService(email, pass, bcc, Executors.newFixedThreadPool(1));
+        emailService4.sendEmail(to, subject, body);
+        
     }
 }
